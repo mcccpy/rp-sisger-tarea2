@@ -22,35 +22,47 @@
 		},
 		"schema": [
 			{
-				"name": "fecha_servicio",
+				"name": "id_incidente",
 				"type": "String"
 			},
 			{
-				"name": "cod_ruta",
+				"name": "tipo",
 				"type": "String"
 			},
 			{
-				"name": "nro_parada",
+				"name": "severidad",
 				"type": "String"
 			},
 			{
-				"name": "franja",
+				"name": "fecha_inicio",
 				"type": "String"
 			},
 			{
-				"name": "estimacion_abordajes",
+				"name": "hora_inicio",
 				"type": "String"
 			},
 			{
-				"name": "estimacion_descensos",
+				"name": "fecha_fin",
 				"type": "String"
 			},
 			{
-				"name": "demanda_no_atendida",
+				"name": "hora_fin",
 				"type": "String"
 			},
 			{
-				"name": "metodo",
+				"name": "fecha_registro",
+				"type": "String"
+			},
+			{
+				"name": "rutas_afectadas",
+				"type": "String"
+			},
+			{
+				"name": "vehiculo_afectado",
+				"type": "String"
+			},
+			{
+				"name": "descripcion",
 				"type": "String"
 			}
 		]
