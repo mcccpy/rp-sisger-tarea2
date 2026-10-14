@@ -1,0 +1,72 @@
+{
+	"name": "incidentes_csv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "cvs"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "incidentes.csv",
+				"folderPath": "csv_2020_2021",
+				"fileSystem": "raw"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "id_incidente",
+				"type": "String"
+			},
+			{
+				"name": "tipo",
+				"type": "String"
+			},
+			{
+				"name": "severidad",
+				"type": "String"
+			},
+			{
+				"name": "fecha_inicio",
+				"type": "String"
+			},
+			{
+				"name": "hora_inicio",
+				"type": "String"
+			},
+			{
+				"name": "fecha_fin",
+				"type": "String"
+			},
+			{
+				"name": "hora_fin",
+				"type": "String"
+			},
+			{
+				"name": "fecha_registro",
+				"type": "String"
+			},
+			{
+				"name": "rutas_afectadas",
+				"type": "String"
+			},
+			{
+				"name": "vehiculo_afectado",
+				"type": "String"
+			},
+			{
+				"name": "descripcion",
+				"type": "String"
+			}
+		]
+	}
+}

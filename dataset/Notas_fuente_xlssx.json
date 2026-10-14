@@ -1,0 +1,34 @@
+{
+	"name": "Notas_fuente_xlssx",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "xlsx/2023"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Notas_fuente",
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "operacion_2023.xlsx",
+				"folderPath": "excel_2022_2023",
+				"fileSystem": "raw"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "elemento",
+				"type": "String"
+			},
+			{
+				"name": "detalle",
+				"type": "String"
+			}
+		]
+	}
+}
