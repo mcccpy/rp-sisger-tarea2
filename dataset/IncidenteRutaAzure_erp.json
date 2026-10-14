@@ -1,0 +1,37 @@
+{
+	"name": "IncidenteRutaAzure_erp",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1_errp",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "sql"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "AnioFuente",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "IncidenteId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RutaHistoricaId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "EsPrincipal",
+				"type": "bit"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "IncidenteRutaAzure"
+		}
+	}
+}
