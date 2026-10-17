@@ -36,8 +36,32 @@
 					"name": "sql"
 				}
 			],
-			"sinks": [],
-			"transformations": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dw_ViajesAzure",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "union1"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "union2"
+				},
+				{
+					"name": "union3"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          id_viaje as string,",
@@ -88,22 +112,77 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> xlsx23",
 				"source(output(",
-				"          AnioFuente as integer,",
+				"          AnioFuente as string,",
 				"          ViajeId as string,",
 				"          RutaHistoricaId as string,",
 				"          VehiculoId as string,",
-				"          FechaServicio as date,",
-				"          HoraProgramada as timestamp,",
-				"          HoraSalida as timestamp,",
-				"          HoraLlegada as timestamp,",
-				"          ValidacionesTarjeta as integer,",
-				"          KmRecorridos as decimal(8,1),",
+				"          FechaServicio as string,",
+				"          HoraProgramada as string,",
+				"          HoraSalida as string,",
+				"          HoraLlegada as string,",
+				"          ValidacionesTarjeta as string,",
+				"          KmRecorridos as string,",
 				"          EstadoViaje as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> sql"
+				"     format: 'table') ~> sql",
+				"csv select(mapColumn(",
+				"          id_viaje,",
+				"          cod_ruta,",
+				"          nro_bus,",
+				"          fec_servicio,",
+				"          hora_programada,",
+				"          hora_salida,",
+				"          hora_llegada,",
+				"          pasajeros_reportados,",
+				"          km_recorridos,",
+				"          estado_viaje,",
+				"          tipo_metrica",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1, select2 union(byName: true)~> union1",
+				"union2 select(mapColumn(",
+				"          id_viaje,",
+				"          cod_ruta,",
+				"          nro_bus,",
+				"          fecha_servicio,",
+				"          hora_programada,",
+				"          hora_salida,",
+				"          hora_llegada,",
+				"          pasajeros_estimados,",
+				"          km_recorridos,",
+				"          estado_viaje,",
+				"          tipo_metrica",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"xlsx22, xlsx23 union(byName: true)~> union2",
+				"union1, sql union(byName: true)~> union3",
+				"union3 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          AnioFuente as string,",
+				"          DemandaId as string,",
+				"          FechaServicio as string,",
+				"          RutaHistoricaId as string,",
+				"          ParadaHistoricaId as string,",
+				"          Franja as string,",
+				"          ValidacionesTarjeta as string,",
+				"          Descensos as string,",
+				"          DemandaNoAtendida as string,",
+				"          Metodo as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
 			]
 		}
 	}

@@ -15,19 +15,49 @@
 					"name": "sql"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dw_IncidenteRutaAzure",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [],
 			"scriptLines": [
 				"source(output(",
-				"          AnioFuente as integer,",
+				"          AnioFuente as string,",
 				"          IncidenteId as string,",
 				"          RutaHistoricaId as string,",
-				"          EsPrincipal as boolean",
+				"          EsPrincipal as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> sql"
+				"     format: 'table') ~> sql",
+				"sql sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          AnioFuente as string,",
+				"          DemandaId as string,",
+				"          FechaServicio as string,",
+				"          RutaHistoricaId as string,",
+				"          ParadaHistoricaId as string,",
+				"          Franja as string,",
+				"          ValidacionesTarjeta as string,",
+				"          Descensos as string,",
+				"          DemandaNoAtendida as string,",
+				"          Metodo as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
 			]
 		}
 	}

@@ -36,8 +36,32 @@
 					"name": "sql"
 				}
 			],
-			"sinks": [],
-			"transformations": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dw_VehiculosAzure",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "union1"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "union2"
+				},
+				{
+					"name": "union3"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          nro_bus as string,",
@@ -76,19 +100,66 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> xlsx23",
 				"source(output(",
-				"          AnioFuente as integer,",
+				"          AnioFuente as string,",
 				"          VehiculoId as string,",
 				"          Placa as string,",
 				"          TipoVehiculo as string,",
-				"          CapacidadEfectiva as integer,",
-				"          VigenciaDesde as date,",
-				"          VigenciaHasta as date,",
+				"          CapacidadEfectiva as string,",
+				"          VigenciaDesde as string,",
+				"          VigenciaHasta as string,",
 				"          Estado as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> sql"
+				"     format: 'table') ~> sql",
+				"csv select(mapColumn(",
+				"          nro_bus,",
+				"          placa,",
+				"          tipo_bus,",
+				"          capacidad,",
+				"          fecha_desde,",
+				"          fecha_hasta,",
+				"          estado",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1, select2 union(byName: true)~> union1",
+				"union2 select(mapColumn(",
+				"          nro_bus,",
+				"          placa,",
+				"          tipo_bus,",
+				"          capacidad,",
+				"          fecha_desde,",
+				"          fecha_hasta,",
+				"          estado",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"xlsx22, xlsx23 union(byName: true)~> union2",
+				"union1, sql union(byName: true)~> union3",
+				"union3 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          AnioFuente as string,",
+				"          DemandaId as string,",
+				"          FechaServicio as string,",
+				"          RutaHistoricaId as string,",
+				"          ParadaHistoricaId as string,",
+				"          Franja as string,",
+				"          ValidacionesTarjeta as string,",
+				"          Descensos as string,",
+				"          DemandaNoAtendida as string,",
+				"          Metodo as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
 			]
 		}
 	}
