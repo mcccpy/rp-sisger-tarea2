@@ -16,39 +16,39 @@
 				"type": "varchar"
 			},
 			{
-				"name": "DemandaId",
-				"type": "varchar"
-			},
-			{
-				"name": "FechaServicio",
-				"type": "varchar"
-			},
-			{
-				"name": "RutaHistoricaId",
-				"type": "varchar"
-			},
-			{
 				"name": "ParadaHistoricaId",
 				"type": "varchar"
 			},
 			{
-				"name": "Franja",
+				"name": "CodigoPublicado",
 				"type": "varchar"
 			},
 			{
-				"name": "ValidacionesTarjeta",
+				"name": "NombreParada",
 				"type": "varchar"
 			},
 			{
-				"name": "Descensos",
+				"name": "Zona",
 				"type": "varchar"
 			},
 			{
-				"name": "DemandaNoAtendida",
+				"name": "Latitud",
 				"type": "varchar"
 			},
 			{
-				"name": "Metodo",
+				"name": "Longitud",
+				"type": "varchar"
+			},
+			{
+				"name": "VigenciaDesde",
+				"type": "varchar"
+			},
+			{
+				"name": "VigenciaHasta",
+				"type": "varchar"
+			},
+			{
+				"name": "Estado",
 				"type": "varchar"
 			}
 		],

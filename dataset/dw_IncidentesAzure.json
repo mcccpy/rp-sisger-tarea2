@@ -16,39 +16,35 @@
 				"type": "varchar"
 			},
 			{
-				"name": "DemandaId",
+				"name": "IncidenteId",
 				"type": "varchar"
 			},
 			{
-				"name": "FechaServicio",
+				"name": "TipoIncidente",
 				"type": "varchar"
 			},
 			{
-				"name": "RutaHistoricaId",
+				"name": "Severidad",
 				"type": "varchar"
 			},
 			{
-				"name": "ParadaHistoricaId",
+				"name": "FechaHoraInicio",
 				"type": "varchar"
 			},
 			{
-				"name": "Franja",
+				"name": "FechaHoraFin",
 				"type": "varchar"
 			},
 			{
-				"name": "ValidacionesTarjeta",
+				"name": "FechaHoraRegistro",
 				"type": "varchar"
 			},
 			{
-				"name": "Descensos",
+				"name": "VehiculoId",
 				"type": "varchar"
 			},
 			{
-				"name": "DemandaNoAtendida",
-				"type": "varchar"
-			},
-			{
-				"name": "Metodo",
+				"name": "Descripcion",
 				"type": "varchar"
 			}
 		],

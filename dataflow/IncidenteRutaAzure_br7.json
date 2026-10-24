@@ -13,6 +13,27 @@
 						"type": "DatasetReference"
 					},
 					"name": "sql"
+				},
+				{
+					"dataset": {
+						"referenceName": "incidentes_csv",
+						"type": "DatasetReference"
+					},
+					"name": "csv"
+				},
+				{
+					"dataset": {
+						"referenceName": "Incidentes_xlssx",
+						"type": "DatasetReference"
+					},
+					"name": "xlsx23"
+				},
+				{
+					"dataset": {
+						"referenceName": "Incidentes_xlsx",
+						"type": "DatasetReference"
+					},
+					"name": "xlsx22"
 				}
 			],
 			"sinks": [
@@ -24,7 +45,23 @@
 					"name": "sink1"
 				}
 			],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "union1"
+				},
+				{
+					"name": "union2"
+				},
+				{
+					"name": "union3"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "derivedColumn1"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          AnioFuente as string,",
@@ -36,19 +73,79 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> sql",
-				"sql sink(allowSchemaDrift: true,",
+				"source(output(",
+				"          id_incidente as string,",
+				"          tipo as string,",
+				"          severidad as string,",
+				"          fecha_inicio as string,",
+				"          hora_inicio as string,",
+				"          fecha_fin as string,",
+				"          hora_fin as string,",
+				"          fecha_registro as string,",
+				"          rutas_afectadas as string,",
+				"          vehiculo_afectado as string,",
+				"          descripcion as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> csv",
+				"source(output(",
+				"          id_incidente as string,",
+				"          tipo as string,",
+				"          severidad as string,",
+				"          fecha_inicio as string,",
+				"          hora_inicio as string,",
+				"          fecha_fin as string,",
+				"          hora_fin as string,",
+				"          fecha_registro as string,",
+				"          rutas_afectadas as string,",
+				"          vehiculo_afectado as string,",
+				"          descripcion as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> xlsx23",
+				"source(output(",
+				"          id_incidente as string,",
+				"          tipo as string,",
+				"          severidad as string,",
+				"          fecha_inicio as string,",
+				"          hora_inicio as string,",
+				"          fecha_fin as string,",
+				"          hora_fin as string,",
+				"          fecha_registro as string,",
+				"          rutas_afectadas as string,",
+				"          vehiculo_afectado as string,",
+				"          descripcion as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> xlsx22",
+				"xlsx23, xlsx22 union(byName: true)~> union1",
+				"csv, union1 union(byName: true)~> union2",
+				"sql, derivedColumn1 union(byName: true)~> union3",
+				"union2 select(mapColumn(",
+				"          IncidenteId = id_incidente,",
+				"          EsPrincipal = severidad,",
+				"          RutaHistoricaId = rutas_afectadas,",
+				"          AnioFuente = fecha_registro",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 derive(EsPrincipal = case(\r",
+				"    trim(upper(EsPrincipal))== 'BAJA' ,'False',\r",
+				"    trim(upper(EsPrincipal))== 'MEDIA' ,'False',\r",
+				"    trim(upper(EsPrincipal))== 'ALTA' ,'True',\r",
+				"    trim(upper(EsPrincipal))== 'CRITICA' ,'True',\r",
+				"    EsPrincipal\r",
+				")) ~> derivedColumn1",
+				"union3 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          AnioFuente as string,",
-				"          DemandaId as string,",
-				"          FechaServicio as string,",
+				"          IncidenteId as string,",
 				"          RutaHistoricaId as string,",
-				"          ParadaHistoricaId as string,",
-				"          Franja as string,",
-				"          ValidacionesTarjeta as string,",
-				"          Descensos as string,",
-				"          DemandaNoAtendida as string,",
-				"          Metodo as string",
+				"          EsPrincipal as string",
 				"     ),",
 				"     deletable:false,",
 				"     insertable:true,",
@@ -57,7 +154,13 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          AnioFuente,",
+				"          IncidenteId,",
+				"          RutaHistoricaId,",
+				"          EsPrincipal",
+				"     )) ~> sink1"
 			]
 		}
 	}

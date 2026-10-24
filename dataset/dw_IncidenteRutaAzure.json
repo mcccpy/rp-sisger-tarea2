@@ -16,11 +16,7 @@
 				"type": "varchar"
 			},
 			{
-				"name": "DemandaId",
-				"type": "varchar"
-			},
-			{
-				"name": "FechaServicio",
+				"name": "IncidenteId",
 				"type": "varchar"
 			},
 			{
@@ -28,27 +24,7 @@
 				"type": "varchar"
 			},
 			{
-				"name": "ParadaHistoricaId",
-				"type": "varchar"
-			},
-			{
-				"name": "Franja",
-				"type": "varchar"
-			},
-			{
-				"name": "ValidacionesTarjeta",
-				"type": "varchar"
-			},
-			{
-				"name": "Descensos",
-				"type": "varchar"
-			},
-			{
-				"name": "DemandaNoAtendida",
-				"type": "varchar"
-			},
-			{
-				"name": "Metodo",
+				"name": "EsPrincipal",
 				"type": "varchar"
 			}
 		],

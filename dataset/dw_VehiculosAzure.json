@@ -16,39 +16,31 @@
 				"type": "varchar"
 			},
 			{
-				"name": "DemandaId",
+				"name": "VehiculoId",
 				"type": "varchar"
 			},
 			{
-				"name": "FechaServicio",
+				"name": "Placa",
 				"type": "varchar"
 			},
 			{
-				"name": "RutaHistoricaId",
+				"name": "TipoVehiculo",
 				"type": "varchar"
 			},
 			{
-				"name": "ParadaHistoricaId",
+				"name": "CapacidadEfectiva",
 				"type": "varchar"
 			},
 			{
-				"name": "Franja",
+				"name": "VigenciaDesde",
 				"type": "varchar"
 			},
 			{
-				"name": "ValidacionesTarjeta",
+				"name": "VigenciaHasta",
 				"type": "varchar"
 			},
 			{
-				"name": "Descensos",
-				"type": "varchar"
-			},
-			{
-				"name": "DemandaNoAtendida",
-				"type": "varchar"
-			},
-			{
-				"name": "Metodo",
+				"name": "Estado",
 				"type": "varchar"
 			}
 		],

@@ -16,11 +16,7 @@
 				"type": "varchar"
 			},
 			{
-				"name": "DemandaId",
-				"type": "varchar"
-			},
-			{
-				"name": "FechaServicio",
+				"name": "ViajeId",
 				"type": "varchar"
 			},
 			{
@@ -28,11 +24,23 @@
 				"type": "varchar"
 			},
 			{
-				"name": "ParadaHistoricaId",
+				"name": "VehiculoId",
 				"type": "varchar"
 			},
 			{
-				"name": "Franja",
+				"name": "FechaServicio",
+				"type": "varchar"
+			},
+			{
+				"name": "HoraProgramada",
+				"type": "varchar"
+			},
+			{
+				"name": "HoraSalida",
+				"type": "varchar"
+			},
+			{
+				"name": "HoraLlegada",
 				"type": "varchar"
 			},
 			{
@@ -40,15 +48,11 @@
 				"type": "varchar"
 			},
 			{
-				"name": "Descensos",
+				"name": "KmRecorridos",
 				"type": "varchar"
 			},
 			{
-				"name": "DemandaNoAtendida",
-				"type": "varchar"
-			},
-			{
-				"name": "Metodo",
+				"name": "EstadoViaje",
 				"type": "varchar"
 			}
 		],
