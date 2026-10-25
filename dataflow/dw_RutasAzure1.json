@@ -27,6 +27,9 @@
 			"transformations": [
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
 				}
 			],
 			"scriptLines": [
@@ -45,8 +48,19 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> source1",
-				"source1 derive() ~> derivedColumn1",
-				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"source1 derive(CodigoRuta = 'R-' + right('00' + regexReplace(CodigoRuta,'[^0-9]',''), 2)\r",
+				",",
+				"          VigenciaDesde = replace(VigenciaDesde, '/', '-'),",
+				"          VigenciaHasta = replace(VigenciaHasta,'/','-'),",
+				"          NombreRuta = case(\r",
+				"    instr(upper(NombreRuta),'NORTE')>0, 'Ruta '+right('00' + regexReplace(CodigoRuta,'[^0-9]',''), 2)+' Norte',\r",
+				"    instr(upper(NombreRuta),'SUR')>0,   'Ruta '+right('00' + regexReplace(CodigoRuta,'[^0-9]',''), 2)+' Sur',\r",
+				"    instr(upper(NombreRuta),'ESTE')>0,  'Ruta '+right('00' + regexReplace(CodigoRuta,'[^0-9]',''), 2)+' Este',\r",
+				"    instr(upper(NombreRuta),'OESTE')>0,   'Ruta '+right('00' + regexReplace(CodigoRuta,'[^0-9]',''), 2)+' Oeste',\r",
+				"    NombreRuta\r",
+				")) ~> derivedColumn1",
+				"derivedColumn1 derive(RutaHistoricaId = replace(CodigoRuta,'R-','RH-')) ~> derivedColumn2",
+				"derivedColumn2 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          AnioFuente as integer,",
