@@ -27,6 +27,9 @@
 			"transformations": [
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
 				}
 			],
 			"scriptLines": [
@@ -45,10 +48,20 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> source1",
-				"source1 derive(FechaHoraInicio = replace(FechaHoraInicio,'/','-'),",
-				"          FechaHoraFin = replace(FechaHoraFin,'/','-'),",
-				"          FechaHoraRegistro = replace(FechaHoraRegistro,'/','-')) ~> derivedColumn1",
-				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"source1 derive(FechaHoraInicio = replace(trim(FechaHoraInicio),'/','-'),",
+				"          FechaHoraFin = replace(trim(FechaHoraFin),'/','-'),",
+				"          FechaHoraRegistro = replace(trim(FechaHoraRegistro),'/','-'),",
+				"          AnioFuente = trim(AnioFuente),",
+				"          IncidenteId = trim(IncidenteId),",
+				"          TipoIncidente = trim(TipoIncidente),",
+				"          Severidad = trim(severidad),",
+				"          VehiculoId = trim(VehiculoId),",
+				"          Descripcion = trim(Descripcion)) ~> derivedColumn1",
+				"derivedColumn1 derive(AnioFuente = toInteger(AnioFuente),",
+				"          FechaHoraInicio = ERROR_FUNCTION(''),",
+				"          FechaHoraFin = ERROR_FUNCTION(''),",
+				"          FechaHoraRegistro = ERROR_FUNCTION('')) ~> derivedColumn2",
+				"derivedColumn2 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          AnioFuente as integer,",

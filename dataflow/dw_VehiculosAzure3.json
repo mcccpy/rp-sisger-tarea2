@@ -27,6 +27,9 @@
 			"transformations": [
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
 				}
 			],
 			"scriptLines": [
@@ -52,7 +55,19 @@
 				"          TipoVehiculo = trim(TipoVehiculo),",
 				"          CapacidadEfectiva = trim(CapacidadEfectiva),",
 				"          Estado = trim(Estado)) ~> derivedColumn1",
-				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"derivedColumn1 derive(AnioFuente = toInteger(AnioFuente),",
+				"          CapacidadEfectiva = toInteger(CapacidadEfectiva),",
+				"          VigenciaDesde = iif(\r",
+				"    length(split(VigenciaDesde,'-')[1]) == 4,\r",
+				"    toDate(VigenciaDesde,'yyyy-MM-dd'),\r",
+				"    toDate(VigenciaDesde,'dd-MM-yyyy')\r",
+				"),",
+				"          VigenciaHasta = iif(\r",
+				"    length(split(VigenciaHasta,'-')[1]) == 4,\r",
+				"    toDate(VigenciaHasta,'yyyy-MM-dd'),\r",
+				"    toDate(VigenciaHasta,'dd-MM-yyyy')\r",
+				")) ~> derivedColumn2",
+				"derivedColumn2 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          AnioFuente as integer,",

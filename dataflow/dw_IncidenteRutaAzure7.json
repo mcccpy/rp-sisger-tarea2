@@ -27,6 +27,9 @@
 			"transformations": [
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
 				}
 			],
 			"scriptLines": [
@@ -40,8 +43,15 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> source1",
-				"source1 derive() ~> derivedColumn1",
-				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"source1 derive(AnioFuente = trim(AnioFuente),",
+				"          IncidenteId = trim(IncidenteId),",
+				"          RutaHistoricaId = trim(RutaHistoricaId),",
+				"          EsPrincipal = trim(EsPrincipal)) ~> derivedColumn1",
+				"derivedColumn1 derive(AnioFuente = toInteger(AnioFuente),",
+				"          EsPrincipal = iif(\r",
+				"    lower(EsPrincipal)=='true',1,0\r",
+				")) ~> derivedColumn2",
+				"derivedColumn2 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          AnioFuente as integer,",

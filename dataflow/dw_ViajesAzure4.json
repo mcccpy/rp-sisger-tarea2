@@ -27,6 +27,9 @@
 			"transformations": [
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
 				}
 			],
 			"scriptLines": [
@@ -47,8 +50,29 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> source1",
-				"source1 derive(FechaServicio = replace(FechaServicio,'/','-')) ~> derivedColumn1",
-				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"source1 derive(FechaServicio = replace(trim(FechaServicio),'/','-'),",
+				"          AnioFuente = trim(AnioFuente),",
+				"          ViajeId = trim(ViajeId),",
+				"          RutaHistoricaId = trim(RutaHistoricaId),",
+				"          VehiculoId = trim(VehiculoId),",
+				"          HoraProgramada = trim(HoraProgramada),",
+				"          HoraSalida = trim(HoraSalida),",
+				"          HoraLlegada = trim(HoraLlegada),",
+				"          ValidacionesTarjeta = trim(ValidacionesTarjeta),",
+				"          KmRecorridos = trim(KmRecorridos),",
+				"          EstadoViaje = trim(EstadoViaje)) ~> derivedColumn1",
+				"derivedColumn1 derive(AnioFuente = toInteger(AnioFuente),",
+				"          FechaServicio = iif(\r",
+				"    length(split(FechaServicio,'-')[1]) == 4,\r",
+				"    toDate(FechaServicio,'yyyy-MM-dd'),\r",
+				"    toDate(FechaServicio,'dd-MM-yyyy')\r",
+				"),",
+				"          HoraProgramada = ERROR_FUNCTION(''),",
+				"          HoraSalida = ERROR_FUNCTION(''),",
+				"          HoraLlegada = ERROR_FUNCTION(''),",
+				"          ValidacionesTarjeta = ERROR_FUNCTION(''),",
+				"          KmRecorridos = toDecimal(KmRecorridos,8,1)) ~> derivedColumn2",
+				"derivedColumn2 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          AnioFuente as integer,",

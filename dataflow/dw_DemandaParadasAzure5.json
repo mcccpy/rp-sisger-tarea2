@@ -27,6 +27,9 @@
 			"transformations": [
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
 				}
 			],
 			"scriptLines": [
@@ -46,8 +49,26 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> source1",
-				"source1 derive(FechaServicio = replace(FechaServicio,'/','-')) ~> derivedColumn1",
-				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"source1 derive(FechaServicio = replace(trim(FechaServicio),'/','-'),",
+				"          AnioFuente = trim(AnioFuente),",
+				"          DemandaId = trim(DemandaId),",
+				"          RutaHistoricaId = trim(RutaHistoricaId),",
+				"          ParadaHistoricaId = trim(ParadaHistoricaId),",
+				"          Franja = trim(Franja),",
+				"          ValidacionesTarjeta = trim(ValidacionesTarjeta),",
+				"          Descensos = trim(Descensos),",
+				"          DemandaNoAtendida = trim(DemandaNoAtendida),",
+				"          Metodo = trim(Metodo)) ~> derivedColumn1",
+				"derivedColumn1 derive(AnioFuente = toInteger(AnioFuente),",
+				"          FechaServicio = iif(\r",
+				"    length(split(FechaServicio,'-')[1]) == 4,\r",
+				"    toDate(FechaServicio,'yyyy-MM-dd'),\r",
+				"    toDate(FechaServicio,'dd-MM-yyyy')\r",
+				"),",
+				"          ValidacionesTarjeta = toInteger(ValidacionesTarjeta),",
+				"          Descensos = toInteger(Descensos),",
+				"          DemandaNoAtendida = toInteger(DemandaNoAtendida)) ~> derivedColumn2",
+				"derivedColumn2 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          AnioFuente as integer,",
