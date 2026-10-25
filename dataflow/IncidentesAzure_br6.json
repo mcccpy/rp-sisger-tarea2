@@ -66,6 +66,15 @@
 				},
 				{
 					"name": "select3"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "derivedColumn3"
+				},
+				{
+					"name": "derivedColumn4"
 				}
 			],
 			"scriptLines": [
@@ -146,7 +155,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1, select2 union(byName: true)~> union1",
+				"derivedColumn2, select2 union(byName: true)~> union1",
 				"union2 select(mapColumn(",
 				"          IncidenteId = id_incidente,",
 				"          TipoIncidente = tipo,",
@@ -157,11 +166,12 @@
 				"          hfi = hora_fin,",
 				"          FechaHoraRegistro = fecha_registro,",
 				"          VehiculoId = vehiculo_afectado,",
-				"          Descripcion = descripcion",
+				"          Descripcion = descripcion,",
+				"          AnioFuente",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select2",
-				"xlsx22, xlsx223 union(byName: true)~> union2",
+				"derivedColumn3, xlsx223 union(byName: true)~> union2",
 				"select3, sql union(byName: true)~> union3",
 				"union1 derive(FechaHoraInicio = FechaHoraInicio+\" \"+hin,",
 				"          FechaHoraFin = FechaHoraFin+\" \"+hfi) ~> derivedColumn1",
@@ -173,10 +183,17 @@
 				"          FechaHoraFin,",
 				"          FechaHoraRegistro,",
 				"          VehiculoId,",
-				"          Descripcion",
+				"          Descripcion,",
+				"          AnioFuente",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select3",
+				"select1 derive(AnioFuente = case(\r",
+				"    instr(IncidenteId,'IN-2021')>0,'2021',\r",
+				"    '2020'\r",
+				")) ~> derivedColumn2",
+				"xlsx22 derive(AnioFuente = '2022') ~> derivedColumn3",
+				"xlsx223 derive(AnioFuente = '2023') ~> derivedColumn4",
 				"union3 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",

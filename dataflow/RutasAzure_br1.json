@@ -60,6 +60,15 @@
 				},
 				{
 					"name": "union3"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "derivedColumn3"
 				}
 			],
 			"scriptLines": [
@@ -125,7 +134,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1, select2 union(byName: true)~> union1",
+				"derivedColumn3, select2 union(byName: true)~> union1",
 				"union2 select(mapColumn(",
 				"          CodigoRuta = cod_ruta,",
 				"          NombreRuta = nombre_ruta,",
@@ -133,12 +142,16 @@
 				"          Destino = destino,",
 				"          VigenciaDesde = fecha_desde,",
 				"          VigenciaHasta = fecha_hasta,",
-				"          Estado = estado",
+				"          Estado = estado,",
+				"          AnioFuente",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select2",
-				"xlsx22, xlsx23 union(byName: true)~> union2",
+				"derivedColumn1, xlsx23 union(byName: true)~> union2",
 				"union1, sql union(byName: true)~> union3",
+				"xlsx22 derive(AnioFuente = '2022') ~> derivedColumn1",
+				"xlsx23 derive(AnioFuente = '2023') ~> derivedColumn2",
+				"select1 derive(AnioFuente = '2020') ~> derivedColumn3",
 				"union3 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",

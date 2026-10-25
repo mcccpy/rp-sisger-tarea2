@@ -60,6 +60,15 @@
 				},
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "derivedColumn3"
+				},
+				{
+					"name": "derivedColumn4"
 				}
 			],
 			"scriptLines": [
@@ -121,14 +130,14 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> xlsx22",
-				"xlsx23, xlsx22 union(byName: true)~> union1",
-				"csv, union1 union(byName: true)~> union2",
+				"derivedColumn2, xlsx22 union(byName: true)~> union1",
+				"derivedColumn4, union1 union(byName: true)~> union2",
 				"sql, derivedColumn1 union(byName: true)~> union3",
 				"union2 select(mapColumn(",
 				"          IncidenteId = id_incidente,",
 				"          EsPrincipal = severidad,",
 				"          RutaHistoricaId = rutas_afectadas,",
-				"          AnioFuente = fecha_registro",
+				"          AnioFuente",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
@@ -139,6 +148,12 @@
 				"    trim(upper(EsPrincipal))== 'CRITICA' ,'True',\r",
 				"    EsPrincipal\r",
 				")) ~> derivedColumn1",
+				"xlsx23 derive(AnioFuente = '2023') ~> derivedColumn2",
+				"xlsx22 derive(AnioFuente = '2022') ~> derivedColumn3",
+				"csv derive(AnioFuente = case(\r",
+				"    instr(id_incidente,'IN-2021')>0,'2021',\r",
+				"    '2020'\r",
+				")) ~> derivedColumn4",
 				"union3 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",

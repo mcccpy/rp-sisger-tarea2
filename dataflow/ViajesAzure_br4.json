@@ -60,6 +60,15 @@
 				},
 				{
 					"name": "union3"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "derivedColumn3"
 				}
 			],
 			"scriptLines": [
@@ -142,7 +151,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1, select2 union(byName: true)~> union1",
+				"derivedColumn1, select2 union(byName: true)~> union1",
 				"union2 select(mapColumn(",
 				"          ViajeId = id_viaje,",
 				"          RutaHistoricaId = cod_ruta,",
@@ -153,12 +162,19 @@
 				"          HoraLlegada = hora_llegada,",
 				"          ValidacionesTarjeta = pasajeros_estimados,",
 				"          KmRecorridos = km_recorridos,",
-				"          EstadoViaje = estado_viaje",
+				"          EstadoViaje = estado_viaje,",
+				"          AnioFuente",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select2",
-				"xlsx22, xlsx23 union(byName: true)~> union2",
+				"derivedColumn2, xlsx23 union(byName: true)~> union2",
 				"union1, sql union(byName: true)~> union3",
+				"select1 derive(AnioFuente = case(\r",
+				"    instr(FechaServicio,'2021')>0,'2021',\r",
+				"    '2020'\r",
+				")) ~> derivedColumn1",
+				"xlsx22 derive(AnioFuente = '2022') ~> derivedColumn2",
+				"xlsx23 derive(AnioFuente = '2023') ~> derivedColumn3",
 				"union3 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
