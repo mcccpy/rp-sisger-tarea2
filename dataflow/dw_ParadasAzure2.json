@@ -27,6 +27,9 @@
 			"transformations": [
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
 				}
 			],
 			"scriptLines": [
@@ -46,9 +49,27 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> source1",
-				"source1 derive(VigenciaDesde = replace(VigenciaDesde,'/','-'),",
-				"          VigenciaHasta = replace(VigenciaHasta,'/','-')) ~> derivedColumn1",
-				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"source1 derive(VigenciaDesde = replace(trim(VigenciaDesde),'/','-'),",
+				"          VigenciaHasta = replace(trim(VigenciaHasta),'/','-'),",
+				"          AnioFuente = trim(AnioFuente),",
+				"          ParadaHistoricaId = trim(ParadaHistoricaId),",
+				"          CodigoPublicado = trim(CodigoPublicado),",
+				"          NombreParada = trim(NombreParada),",
+				"          Zona = trim(Zona),",
+				"          Latitud = replace(trim(Latitud),',','.'),",
+				"          Longitud = replace(trim(Longitud),',','.'),",
+				"          Estado = trim(Estado)) ~> derivedColumn1",
+				"derivedColumn1 derive(VigenciaDesde = iif(\r",
+				"    length(split(VigenciaDesde,'-')[1]) == 4,\r",
+				"    toDate(VigenciaDesde,'yyyy-MM-dd'),\r",
+				"    toDate(VigenciaDesde,'dd-MM-yyyy')\r",
+				"),",
+				"          VigenciaHasta = iif(\r",
+				"    length(split(VigenciaHasta,'-')[1]) == 4,\r",
+				"    toDate(VigenciaHasta,'yyyy-MM-dd'),\r",
+				"    toDate(VigenciaHasta,'dd-MM-yyyy')\r",
+				")) ~> derivedColumn2",
+				"derivedColumn2 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          AnioFuente as integer,",
