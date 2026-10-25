@@ -11,11 +11,10 @@
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
-			"sheetName": "Incidentes",
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": "operacion_2023.xlsx",
-				"folderPath": "excel_2022_2023",
+				"folderPath": "datos_xls",
 				"fileSystem": "raw"
 			},
 			"firstRowAsHeader": true

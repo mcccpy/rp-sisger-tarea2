@@ -14,7 +14,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": "viajes.csv",
-				"folderPath": "csv_2020_2021",
+				"folderPath": "datos_csv",
 				"fileSystem": "raw"
 			},
 			"columnDelimiter": ",",
