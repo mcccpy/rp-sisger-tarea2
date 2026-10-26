@@ -171,7 +171,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select2",
-				"derivedColumn3, xlsx223 union(byName: true)~> union2",
+				"derivedColumn3, derivedColumn4 union(byName: true)~> union2",
 				"select3, sql union(byName: true)~> union3",
 				"union1 derive(FechaHoraInicio = FechaHoraInicio+\" \"+hin,",
 				"          FechaHoraFin = FechaHoraFin+\" \"+hfi) ~> derivedColumn1",

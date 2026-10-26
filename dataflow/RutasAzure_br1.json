@@ -147,7 +147,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select2",
-				"derivedColumn1, xlsx23 union(byName: true)~> union2",
+				"derivedColumn1, derivedColumn2 union(byName: true)~> union2",
 				"union1, sql union(byName: true)~> union3",
 				"xlsx22 derive(AnioFuente = '2022') ~> derivedColumn1",
 				"xlsx23 derive(AnioFuente = '2023') ~> derivedColumn2",

@@ -130,7 +130,7 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> xlsx22",
-				"derivedColumn2, xlsx22 union(byName: true)~> union1",
+				"derivedColumn2, derivedColumn3 union(byName: true)~> union1",
 				"derivedColumn4, union1 union(byName: true)~> union2",
 				"sql, derivedColumn1 union(byName: true)~> union3",
 				"union2 select(mapColumn(",

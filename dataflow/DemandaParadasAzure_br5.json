@@ -153,7 +153,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select2",
-				"derivedColumn2, xlsx23 union(byName: true)~> union2",
+				"derivedColumn2, derivedColumn3 union(byName: true)~> union2",
 				"union1, sql union(byName: true)~> union3",
 				"select1 derive(AnioFuente = case (\r",
 				"    instr(FechaServicio,'2021' )>0,'2021',\r",
