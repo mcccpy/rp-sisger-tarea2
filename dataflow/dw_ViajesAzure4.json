@@ -30,6 +30,9 @@
 				},
 				{
 					"name": "derivedColumn2"
+				},
+				{
+					"name": "aggregate1"
 				}
 			],
 			"scriptLines": [
@@ -72,7 +75,9 @@
 				"          HoraLlegada = ERROR_FUNCTION(''),",
 				"          ValidacionesTarjeta = ERROR_FUNCTION(''),",
 				"          KmRecorridos = toDecimal(KmRecorridos,8,1)) ~> derivedColumn2",
-				"derivedColumn2 sink(allowSchemaDrift: true,",
+				"derivedColumn2 aggregate(groupBy(ViajeId),",
+				"     each(match(name != 'ViajeId'), $$ = first($$))) ~> aggregate1",
+				"aggregate1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          AnioFuente as integer,",

@@ -30,6 +30,9 @@
 				},
 				{
 					"name": "derivedColumn2"
+				},
+				{
+					"name": "aggregate1"
 				}
 			],
 			"scriptLines": [
@@ -61,7 +64,9 @@
 				"          FechaHoraInicio = ERROR_FUNCTION(''),",
 				"          FechaHoraFin = ERROR_FUNCTION(''),",
 				"          FechaHoraRegistro = ERROR_FUNCTION('')) ~> derivedColumn2",
-				"derivedColumn2 sink(allowSchemaDrift: true,",
+				"derivedColumn2 aggregate(groupBy(IncidenteId),",
+				"     each(match(name != 'IncidenteId'), $$ = first($$))) ~> aggregate1",
+				"aggregate1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          AnioFuente as integer,",
