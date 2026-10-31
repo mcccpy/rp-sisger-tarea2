@@ -35,12 +35,6 @@
 					"name": "aggregate1"
 				},
 				{
-					"name": "split1"
-				},
-				{
-					"name": "filter1"
-				},
-				{
 					"name": "derivedColumn3"
 				}
 			],
@@ -90,23 +84,15 @@
 				"          AnioFuente = toInteger(AnioFuente),",
 				"          Latitud = toDecimal(Latitud,9,6),",
 				"          Longitud = toDecimal(Longitud,9,6),",
-				"          ParadaHistoricaId = \r",
-				"\r",
-				"iif (\r",
+				"          ParadaHistoricaId = iif (\r",
 				"    regexMatch(ParadaHistoricaId, '^P[0-9]{3}.*'),\r",
 				"    regexExtract(ParadaHistoricaId, '(P[0-9]+)', 1),\r",
 				"    ParadaHistoricaId\r",
 				")) ~> derivedColumn2",
 				"derivedColumn2 aggregate(groupBy(ParadaHistoricaId),",
 				"     each(match(name!='ParadaHistoricaId'), $$ = first($$))) ~> aggregate1",
-				"filter1 split(!(isNull(ParadaHistoricaId) || isNull(CodigoPublicado) || \r",
-				"isNull(NombreParada) || isNull(Zona) || \r",
-				"isNull(Latitud) || isNull(Longitud) || \r",
-				"isNull(VigenciaDesde) || isNull(VigenciaHasta) || isNull(Estado) || !regexMatch(trim(ParadaHistoricaId), '^P[0-9]{3}$')),",
-				"     disjoint: false) ~> split1@(good, bad)",
-				"aggregate1 filter(Estado == 'ACTIVA') ~> filter1",
-				"source1 derive(each(match(type == 'string'), $$ = trim($$))) ~> derivedColumn3",
-				"split1@good sink(allowSchemaDrift: true,",
+				"source1 derive(each(match(type=='string'), $$ = trim($$))) ~> derivedColumn3",
+				"aggregate1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          AnioFuente as integer,",

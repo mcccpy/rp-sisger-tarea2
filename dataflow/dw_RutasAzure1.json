@@ -35,12 +35,6 @@
 					"name": "aggregate1"
 				},
 				{
-					"name": "filter1"
-				},
-				{
-					"name": "split1"
-				},
-				{
 					"name": "derivedColumn3"
 				}
 			],
@@ -97,14 +91,8 @@
 				"          AnioFuente = toInteger(AnioFuente)) ~> derivedColumn2",
 				"derivedColumn2 aggregate(groupBy(RutaHistoricaId),",
 				"     each(match(name!='RutaHistoricaId'), $$ = first($$))) ~> aggregate1",
-				"aggregate1 filter(Estado == 'ACTIVA') ~> filter1",
-				"filter1 split(!(isNull(RutaHistoricaId) || isNull(AnioFuente) \r",
-				"|| isNull(CodigoRuta) || isNull(NombreRuta) \r",
-				"|| isNull(Origen) || isNull(Destino) \r",
-				"|| isNull(VigenciaDesde) || isNull(VigenciaHasta) || isNull(Estado)),",
-				"     disjoint: false) ~> split1@(good, bad)",
-				"source1 derive(each(match(type == 'string'), $$ = trim($$))) ~> derivedColumn3",
-				"split1@good sink(allowSchemaDrift: true,",
+				"source1 derive(each(match(type=='string'), $$ = trim($$))) ~> derivedColumn3",
+				"aggregate1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          AnioFuente as integer,",
