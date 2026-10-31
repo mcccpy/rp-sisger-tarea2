@@ -39,9 +39,6 @@
 				},
 				{
 					"name": "derivedColumn3"
-				},
-				{
-					"name": "derivedColumn4"
 				}
 			],
 			"scriptLines": [
@@ -125,22 +122,7 @@
 				"     each(match(name!='ViajeId'), $$ = first($$))) ~> aggregate1",
 				"source1 filter(!(isNull(RutaHistoricaId) && isNull(VehiculoId))) ~> filter1",
 				"filter1 derive(each(match(type=='string'), $$ = trim($$))) ~> derivedColumn3",
-				"aggregate1 derive(HoraProgramada = iif(\r",
-				"    isNull(HoraProgramada),\r",
-				"    toTimestamp('9999-12-31 00:00:00'),\r",
-				"    HoraProgramada\r",
-				"),",
-				"          HoraSalida = iif(\r",
-				"    isNull(HoraSalida),\r",
-				"    toTimestamp('9999-12-31 00:00:00'),\r",
-				"    HoraSalida\r",
-				"),",
-				"          HoraLlegada = iif(\r",
-				"    isNull(HoraLlegada),\r",
-				"    toTimestamp('9999-12-31 00:00:00'),\r",
-				"    HoraLlegada\r",
-				")) ~> derivedColumn4",
-				"derivedColumn4 sink(allowSchemaDrift: true,",
+				"aggregate1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          AnioFuente as integer,",
@@ -161,7 +143,9 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+				"     errorHandlingOption: 'allErrors',",
+				"     transactionCommit: 'single',",
+				"     reportSuccessOnError: false) ~> sink1"
 			]
 		}
 	}

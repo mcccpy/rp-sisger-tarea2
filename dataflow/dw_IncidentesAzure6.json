@@ -56,8 +56,7 @@
 				"     format: 'table') ~> source1",
 				"derivedColumn3 derive(TipoIncidente = upper(TipoIncidente),",
 				"          Severidad = upper(Severidad),",
-				"          VehiculoId = \r",
-				"iif(\r",
+				"          VehiculoId = iif(\r",
 				"    !isNull(VehiculoId),'V-' + right('000' + regexReplace(VehiculoId,'[^0-9]',''), 3),VehiculoId\r",
 				")) ~> derivedColumn1",
 				"derivedColumn1 derive(AnioFuente = toInteger(AnioFuente),",
@@ -139,7 +138,7 @@
 				")) ~> derivedColumn2",
 				"derivedColumn2 aggregate(groupBy(IncidenteId),",
 				"     each(match(name!='IncidenteId'), $$ = first($$))) ~> aggregate1",
-				"source1 derive(each(match(type == 'string'), $$ = trim($$))) ~> derivedColumn3",
+				"source1 derive(each(match(type=='string'), $$ = trim($$))) ~> derivedColumn3",
 				"aggregate1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
@@ -161,7 +160,9 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+				"     errorHandlingOption: 'allErrors',",
+				"     transactionCommit: 'single',",
+				"     reportSuccessOnError: false) ~> sink1"
 			]
 		}
 	}
