@@ -33,6 +33,9 @@
 				},
 				{
 					"name": "aggregate1"
+				},
+				{
+					"name": "filter1"
 				}
 			],
 			"scriptLines": [
@@ -53,11 +56,11 @@
 				"source1 derive(VigenciaDesde = replace(trim(VigenciaDesde),'/','-'),",
 				"          VigenciaHasta = replace(trim(VigenciaHasta),'/','-'),",
 				"          AnioFuente = trim(AnioFuente),",
-				"          VehiculoId = trim(VehiculoId),",
-				"          Placa = trim(Placa),",
+				"          VehiculoId = 'V-' + right('000' + regexReplace(trim(VehiculoId),'[^0-9]',''), 3),",
+				"          Placa = 'ABC-' + right('000' + regexReplace(trim(Placa),'[^0-9]',''), 3),",
 				"          TipoVehiculo = trim(TipoVehiculo),",
 				"          CapacidadEfectiva = trim(CapacidadEfectiva),",
-				"          Estado = trim(Estado)) ~> derivedColumn1",
+				"          Estado = upper(trim(Estado))) ~> derivedColumn1",
 				"derivedColumn1 derive(AnioFuente = toInteger(AnioFuente),",
 				"          CapacidadEfectiva = toInteger(CapacidadEfectiva),",
 				"          VigenciaDesde = iif(\r",
@@ -71,8 +74,9 @@
 				"    toDate(VigenciaHasta,'dd-MM-yyyy')\r",
 				")) ~> derivedColumn2",
 				"derivedColumn2 aggregate(groupBy(VehiculoId),",
-				"     each(match(name != 'VehiculoId'), $$ = first($$))) ~> aggregate1",
-				"aggregate1 sink(allowSchemaDrift: true,",
+				"     each(match(name!='VehiculoId'), $$ = first($$))) ~> aggregate1",
+				"aggregate1 filter(Estado == 'ACTIVO') ~> filter1",
+				"filter1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          AnioFuente as integer,",
