@@ -39,6 +39,9 @@
 				},
 				{
 					"name": "filter1"
+				},
+				{
+					"name": "derivedColumn3"
 				}
 			],
 			"scriptLines": [
@@ -58,19 +61,14 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> source1",
-				"source1 derive(VigenciaDesde = replace(trim(VigenciaDesde),'/','-'),",
-				"          VigenciaHasta = replace(trim(VigenciaHasta),'/','-'),",
-				"          AnioFuente = trim(AnioFuente),",
-				"          ParadaHistoricaId = trim(ParadaHistoricaId)\r",
-				",",
+				"derivedColumn3 derive(VigenciaDesde = replace(VigenciaDesde,'/','-'),",
+				"          VigenciaHasta = replace(VigenciaHasta,'/','-'),",
 				"          CodigoPublicado = iif (\r",
-				"    isNull(CodigoPublicado), trim(ParadaHistoricaId),trim(CodigoPublicado)\r",
+				"    isNull(CodigoPublicado), ParadaHistoricaId,CodigoPublicado\r",
 				"),",
-				"          NombreParada = trim(NombreParada),",
-				"          Zona = trim(Zona),",
-				"          Latitud = replace(trim(Latitud),',','.'),",
-				"          Longitud = replace(trim(Longitud),',','.'),",
-				"          Estado = upper(trim(Estado))) ~> derivedColumn1",
+				"          Latitud = replace(Latitud,',','.'),",
+				"          Longitud = replace(Longitud,',','.'),",
+				"          Estado = upper(Estado)) ~> derivedColumn1",
 				"derivedColumn1 derive(VigenciaDesde = iif(\r",
 				"    regexMatch(VigenciaDesde, '^[0-9]+$'),\r",
 				"    addDays(toDate('1899-12-30'), toInteger(VigenciaDesde)),\r",
@@ -107,6 +105,7 @@
 				"isNull(VigenciaDesde) || isNull(VigenciaHasta) || isNull(Estado) || !regexMatch(trim(ParadaHistoricaId), '^P[0-9]{3}$')),",
 				"     disjoint: false) ~> split1@(good, bad)",
 				"aggregate1 filter(Estado == 'ACTIVA') ~> filter1",
+				"source1 derive(each(match(type == 'string'), $$ = trim($$))) ~> derivedColumn3",
 				"split1@good sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
