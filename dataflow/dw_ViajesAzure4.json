@@ -48,9 +48,6 @@
 					"name": "derivedColumn3"
 				},
 				{
-					"name": "exists1"
-				},
-				{
 					"name": "exists2"
 				}
 			],
@@ -142,14 +139,11 @@
 				"),",
 				"          ValidacionesTarjeta = toInteger(ValidacionesTarjeta),",
 				"          KmRecorridos = toDecimal(KmRecorridos,8,1)) ~> derivedColumn2",
-				"exists1 aggregate(groupBy(ViajeId,",
+				"derivedColumn2 aggregate(groupBy(ViajeId,",
 				"          RutaHistoricaId),",
 				"     each(match(name!='ViajeId'  && name != 'RutaHistoricaId'), $$ = last($$))) ~> aggregate1",
 				"source1 filter(!(isNull(RutaHistoricaId) && isNull(VehiculoId))) ~> filter1",
 				"filter1 derive(each(match(type=='string'), $$ = trim($$))) ~> derivedColumn3",
-				"derivedColumn2, source2 exists(derivedColumn3@RutaHistoricaId == source2@RutaHistoricaId,",
-				"     negate:false,",
-				"     broadcast: 'auto')~> exists1",
 				"aggregate1, source1 exists(aggregate1@RutaHistoricaId == source1@RutaHistoricaId,",
 				"     negate:false,",
 				"     broadcast: 'auto')~> exists2",
