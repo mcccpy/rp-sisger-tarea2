@@ -41,9 +41,6 @@
 					"name": "derivedColumn3"
 				},
 				{
-					"name": "filter2"
-				},
-				{
 					"name": "derivedColumn4"
 				}
 			],
@@ -128,8 +125,7 @@
 				"     each(match(name!='ViajeId'), $$ = first($$))) ~> aggregate1",
 				"source1 filter(!(isNull(RutaHistoricaId) && isNull(VehiculoId))) ~> filter1",
 				"filter1 derive(each(match(type=='string'), $$ = trim($$))) ~> derivedColumn3",
-				"aggregate1 filter(isNull(HoraProgramada)) ~> filter2",
-				"filter2 derive(HoraProgramada = iif(\r",
+				"aggregate1 derive(HoraProgramada = iif(\r",
 				"    isNull(HoraProgramada),\r",
 				"    toTimestamp('9999-12-31 00:00:00'),\r",
 				"    HoraProgramada\r",
