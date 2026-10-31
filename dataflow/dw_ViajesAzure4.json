@@ -13,6 +13,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "silver_RutasAzure",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
 				}
 			],
 			"sinks": [
@@ -41,7 +48,10 @@
 					"name": "derivedColumn3"
 				},
 				{
-					"name": "derivedColumn4"
+					"name": "exists1"
+				},
+				{
+					"name": "exists2"
 				}
 			],
 			"scriptLines": [
@@ -62,6 +72,22 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> source1",
+				"source(output(",
+				"          AnioFuente as integer,",
+				"          DemandaId as string,",
+				"          FechaServicio as date,",
+				"          RutaHistoricaId as string,",
+				"          ParadaHistoricaId as string,",
+				"          Franja as string,",
+				"          ValidacionesTarjeta as integer,",
+				"          Descensos as integer,",
+				"          DemandaNoAtendida as integer,",
+				"          Metodo as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source2",
 				"derivedColumn3 derive(FechaServicio = iif(\r",
 				"    length(split(replace(FechaServicio,'/','-'),'-')[1]) == 4,\r",
 				"    toDate(replace(FechaServicio,'/','-'),'yyyy-MM-dd'),\r",
@@ -71,12 +97,6 @@
 				"    regexMatch(ViajeId, '^VJ-[0-9]{4}-[0-9]{5}$'),ViajeId,\r",
 				"    'VJ-' + AnioFuente + '-' +regexExtract(ViajeId, '([0-9]{5})', 1)\r",
 				"),",
-				"          RutaHistoricaId = case (\r",
-				"    regexMatch(RutaHistoricaId, '^RH-[0-9]{2}-(S|N)$'),RutaHistoricaId,\r",
-				"    'RH-'+right('00' + regexReplace(RutaHistoricaId,'[^0-9]',''), 2)\r",
-				")\r",
-				"\r",
-				",",
 				"          VehiculoId = iif(\r",
 				"    regexMatch(VehiculoId, '^V-[0-9]{3}$'),VehiculoId,\r",
 				"    'V-' +regexExtract(VehiculoId, '([0-9]{3})', 1)\r",
@@ -122,12 +142,18 @@
 				"),",
 				"          ValidacionesTarjeta = toInteger(ValidacionesTarjeta),",
 				"          KmRecorridos = toDecimal(KmRecorridos,8,1)) ~> derivedColumn2",
-				"derivedColumn2 aggregate(groupBy(ViajeId),",
-				"     each(match(name!='ViajeId'), $$ = last($$))) ~> aggregate1",
+				"exists1 aggregate(groupBy(ViajeId,",
+				"          RutaHistoricaId),",
+				"     each(match(name!='ViajeId'  && name != 'RutaHistoricaId'), $$ = last($$))) ~> aggregate1",
 				"source1 filter(!(isNull(RutaHistoricaId) && isNull(VehiculoId))) ~> filter1",
 				"filter1 derive(each(match(type=='string'), $$ = trim($$))) ~> derivedColumn3",
-				"aggregate1 derive(each(match(type == 'string'), $$ = trim($$))) ~> derivedColumn4",
-				"derivedColumn4 sink(allowSchemaDrift: true,",
+				"derivedColumn2, source2 exists(derivedColumn3@RutaHistoricaId == source2@RutaHistoricaId,",
+				"     negate:false,",
+				"     broadcast: 'auto')~> exists1",
+				"aggregate1, source1 exists(aggregate1@RutaHistoricaId == source1@RutaHistoricaId,",
+				"     negate:false,",
+				"     broadcast: 'auto')~> exists2",
+				"exists2 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          AnioFuente as integer,",
@@ -150,7 +176,7 @@
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'allErrors',",
 				"     transactionCommit: 'single',",
-				"     reportSuccessOnError: true) ~> sink1"
+				"     reportSuccessOnError: false) ~> sink1"
 			]
 		}
 	}
