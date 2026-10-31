@@ -96,7 +96,7 @@
 				"    )\r",
 				"),",
 				"          AnioFuente = toInteger(AnioFuente)) ~> derivedColumn2",
-				"derivedColumn2 aggregate(groupBy(RutaHistoricaId = derivedColumn2@RutaHistoricaId),",
+				"derivedColumn2 aggregate(groupBy(RutaHistoricaId),",
 				"     each(match(name!='RutaHistoricaId'), $$ = first($$))) ~> aggregate1",
 				"aggregate1 filter(Estado == 'ACTIVA') ~> filter1",
 				"filter1 split(!(isNull(RutaHistoricaId) || isNull(AnioFuente) \r",

@@ -79,7 +79,7 @@
 				"          HoraSalida = trim(HoraSalida),",
 				"          HoraLlegada = trim(HoraLlegada),",
 				"          ValidacionesTarjeta = trim(ValidacionesTarjeta),",
-				"          KmRecorridos = trim(KmRecorridos),",
+				"          KmRecorridos = replace(trim(KmRecorridos),',','.'),",
 				"          EstadoViaje = upper(trim(EstadoViaje))) ~> derivedColumn1",
 				"derivedColumn1 derive(AnioFuente = toInteger(AnioFuente),",
 				"          HoraProgramada = case(\r",
