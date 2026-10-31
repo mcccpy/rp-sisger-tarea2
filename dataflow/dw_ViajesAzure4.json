@@ -33,6 +33,9 @@
 				},
 				{
 					"name": "aggregate1"
+				},
+				{
+					"name": "filter1"
 				}
 			],
 			"scriptLines": [
@@ -53,7 +56,7 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> source1",
-				"source1 derive(FechaServicio = iif(\r",
+				"filter1 derive(FechaServicio = iif(\r",
 				"    length(split(replace(trim(FechaServicio),'/','-'),'-')[1]) == 4,\r",
 				"    toDate(replace(trim(FechaServicio),'/','-'),'yyyy-MM-dd'),\r",
 				"    toDate(replace(trim(FechaServicio),'/','-'),'dd-MM-yyyy')\r",
@@ -123,6 +126,7 @@
 				"          KmRecorridos = toDecimal(KmRecorridos,8,1)) ~> derivedColumn2",
 				"derivedColumn2 aggregate(groupBy(ViajeId),",
 				"     each(match(name!='ViajeId'), $$ = first($$))) ~> aggregate1",
+				"source1 filter(!(isNull(RutaHistoricaId) && isNull(VehiculoId))) ~> filter1",
 				"aggregate1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
