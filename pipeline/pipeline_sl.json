@@ -33,7 +33,8 @@
 					{
 						"activity": "Data flow1",
 						"dependencyConditions": [
-							"Succeeded"
+							"Succeeded",
+							"Failed"
 						]
 					}
 				],
@@ -64,7 +65,8 @@
 					{
 						"activity": "Data flow2",
 						"dependencyConditions": [
-							"Succeeded"
+							"Succeeded",
+							"Failed"
 						]
 					}
 				],
@@ -95,7 +97,8 @@
 					{
 						"activity": "Data flow3",
 						"dependencyConditions": [
-							"Succeeded"
+							"Succeeded",
+							"Failed"
 						]
 					}
 				],
@@ -126,7 +129,8 @@
 					{
 						"activity": "Data flow4",
 						"dependencyConditions": [
-							"Succeeded"
+							"Succeeded",
+							"Failed"
 						]
 					}
 				],
@@ -157,7 +161,8 @@
 					{
 						"activity": "Data flow5",
 						"dependencyConditions": [
-							"Succeeded"
+							"Succeeded",
+							"Failed"
 						]
 					}
 				],
@@ -188,7 +193,8 @@
 					{
 						"activity": "Data flow6",
 						"dependencyConditions": [
-							"Succeeded"
+							"Succeeded",
+							"Failed"
 						]
 					}
 				],
